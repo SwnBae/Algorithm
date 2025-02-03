@@ -1,39 +1,43 @@
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 public class Main {
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		Scanner sc = new Scanner(System.in);
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
-		int t = Integer.parseInt(sc.nextLine());
+		int t = Integer.parseInt(br.readLine());
 		
-		for(int i=0;i<t;i++) {
-			String input = sc.nextLine();
-			int count = 0;
+		for(int i = 0; i < t; i++) {
+			String[] input = br.readLine().split("");
+			Stack<String> stack = new Stack<>();
+			boolean end = false;
 			
-			for(int j=0;j<input.length();j++) {
-				if(input.charAt(j) == '(') {
-					count++;
-				} else if(input.charAt(j) == ')') {
-					count--;
+			for(int p = 0; p < input.length; p++) {
+				if(input[p].equals("(")) {
+					stack.add(input[p]);
+				} else if(input[p].equals(")")) {
+					if(stack.isEmpty()) {
+						System.out.println("NO");
+						end = true;
+						break;
+					} else {
+						stack.pop();
+					}
 				}
-				
-				if(count < 0) {
+			}
+			
+			if(!end) {
+				if(stack.isEmpty()) {
+					System.out.println("YES");
+				} else {
 					System.out.println("NO");
-					break;
 				}
 			}
 			
-			if(count < 0) {
-				continue;
-			}
 			
-			if(count > 0) {
-				System.out.println("NO");
-			} else {
-				System.out.println("YES");
-			}
 		}
+
 	}
+
 }
