@@ -2,29 +2,36 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+//DFS
 public class Main {
+	
+	public static int n;
+	public static int count;
+	
+	public static void dfs(int num) {
+		if(num == n) {
+			count++;
+			return;
+		}
+		
+		for(int i = 1; i <=3; i++) {
+			if(num > n) continue;
+			
+			dfs(num + i);
+		}
+	}
 
 	public static void main(String[] args) throws IOException {
-		// TODO Auto-generated method stub
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
-		int t = Integer.parseInt(br.readLine());
-		int[] arr = new int[12];
+		int tc = Integer.parseInt(br.readLine());
 		
-		arr[1] = 1;
-		arr[2] = 2;
-		arr[3] = 4;
-		
-		for(int i = 4; i <=11; i++) {
-			arr[i] = arr[i-1] + arr[i-2] + arr[i-3];
+		for(int t= 1; t <= tc; t++) {
+			n = Integer.parseInt(br.readLine());
+			count = 0;
+			dfs(0);
+			System.out.println(count);
 		}
-		
-		for(int i = 0; i < t; i++) {
-			int n = Integer.parseInt(br.readLine());
-			
-			System.out.println(arr[n]);		
-		}
-
 	}
 
 }
