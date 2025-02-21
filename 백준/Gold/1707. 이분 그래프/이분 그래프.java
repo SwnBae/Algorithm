@@ -16,19 +16,18 @@ public class Main {
 			return;
 		}
 		
-		if(visited[node] != 0) {
-			if(visited[node] != color) { // r -> b, 다음 넌 블루여야 하는데.. 만약 레드면?
-				result = false;
-				return;
-			} else {
-				return;
-			}
-		}
-		
 		visited[node] = color;
 		
 		for(int nd : graph.get(node)) {
-			dfs(nd, color * -1); // 다음 
+			if(visited[nd] == color) {
+				result = false;
+				return;
+			}
+			
+			if(visited[nd] == 0) {
+				dfs(nd, color * -1); // 다음 
+			}
+			
 		}
 	}
 
@@ -64,6 +63,8 @@ public class Main {
 			}
 			
 			for(int i = 1; i <= v; i++) {
+				if(result == false) break;
+				
 				if(visited[i] == 0) {
 					dfs(i,RED);
 				}
