@@ -1,87 +1,66 @@
-import java.util.LinkedList;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayDeque;
 import java.util.Queue;
-import java.util.Scanner;
 
 public class Main {
-	public static int[][] space = new int[101][101];
-	public static boolean[][] visited = new boolean[101][101];
-
+	public static int[] dy = {0,0,-1,1};
+	public static int[] dx = {-1,1,0,0};
+	public static int n;
+	public static int m;
+	public static int[][] space;
+	public static boolean[][] visited;
 	
-	public static boolean check(int y, int x ,int n, int m) {
-		if(y<1 || y>n || x<1 || x>m) {
-			return false;
-		}
-		if(space[y][x] == 0) {
-			return false;
-		}
-		if(visited[y][x]) return false;
-		
-		return true;
+	public static boolean check(int y, int x) {
+		return y < 0 || y >= n || x < 0 || x >=m || visited[y][x] || space[y][x] == 0;
 	}
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
-		String[] s = sc.nextLine().split(" ");
-		int n = Integer.parseInt(s[0]);
-		int m = Integer.parseInt(s[1]);
+		String[] nm = br.readLine().split(" ");
+		n = Integer.parseInt(nm[0]);
+		m = Integer.parseInt(nm[1]);
+		visited = new boolean[n][m];
+		space = new int[n][m];
 		int result = 0;
-		Queue<int[]> sp = new LinkedList<>();
-//		Queue<Integer> y = new LinkedList<>();
-//		Queue<Integer> x = new LinkedList<>();
-//		Queue<Integer> count = new LinkedList<>();
 		
-		for(int i=1; i<=n;i++) {
-			String input = sc.nextLine();
-			for(int j=1;j<=m;j++) {
-				space[i][j] = input.charAt(j-1) - '0';
+		for(int i = 0; i < n; i++) {
+			String[] input = br.readLine().split("");
+			for(int j = 0; j < m; j++) {
+				space[i][j] = Integer.parseInt(input[j]);
 			}
 		}
 		
-		sp.add(new int[] {1,1,1});
+		Queue<int[]> queue = new ArrayDeque<>();
+
+		queue.offer(new int[] {0,0,1});
 		
-//		y.add(1);
-//		x.add(1);
-//		count.add(1);
-		
-		while(sp.isEmpty() == false) {
-			int[] qsp = sp.poll();
-			int qy = qsp[0];
-			int qx = qsp[1];
-			int qc = qsp[2];
+		while(!queue.isEmpty()) {
+			int[] tmp = queue.poll();
+			int y = tmp[0];
+			int x = tmp[1];
+			int cnt = tmp[2];
 			
-			if(qy == n && qx == m) {
-				result = qc;
+			if(y == n-1 && x == m-1) {
+				result = cnt;
 				break;
 			}
 			
-			if(visited[qy][qx]) continue;
-			visited[qy][qx] = true;
+			if(visited[y][x]) continue;
+			visited[y][x] = true;
 			
-			if(check(qy-1,qx,n,m)) {
-//				y.add(qy-1); x.add(qx); count.add(qc+1);
-				sp.add(new int[] {qy-1,qx,qc+1});
+			for(int i = 0; i < 4; i++) {
+				int tmpY = y + dy[i];
+				int tmpX = x + dx[i];
+				
+				if(check(tmpY,tmpX)) continue;
+				queue.offer(new int[] {tmpY,tmpX,cnt + 1});
 			}
-			
-			if(check(qy+1,qx,n,m)) {
-				//y.add(qy+1); x.add(qx); count.add(qc+1);
-				sp.add(new int[] {qy+1,qx,qc+1});
-			}
-			
-			if(check(qy,qx-1,n,m)) {
-				//y.add(qy); x.add(qx-1); count.add(qc+1);
-				sp.add(new int[] {qy,qx-1,qc+1});
-			}
-			
-			if(check(qy,qx+1,n,m)) {
-				//y.add(qy); x.add(qx+1); count.add(qc+1);
-				sp.add(new int[] {qy,qx+1,qc+1});
-			}
-			
 		}
 		
 		System.out.println(result);
-
 	}
 
 }
