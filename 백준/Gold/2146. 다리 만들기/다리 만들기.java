@@ -13,6 +13,7 @@ public class Main {
     public static boolean[][] visited;
     public static int idx;
     public static int min;
+    public static Queue<int[]> coast;
 
     public static boolean outBound(int y, int x){
         return y < 0 || y >= n || x < 0 || x >= n;
@@ -21,14 +22,20 @@ public class Main {
     //다음 위치 1이어야함
     public static void dfs(int y, int x, int idx){
         space[y][x] = idx;
+        boolean cst = false;
 
         for(int i = 0; i < 4; i++){
             int tmpY = y + dy[i];
             int tmpX = x + dx[i];
 
-            if(outBound(tmpY,tmpX) || space[tmpY][tmpX] != 1) continue;
-
-            dfs(tmpY,tmpX,idx);
+            if(!outBound(tmpY,tmpX)){
+                if(space[tmpY][tmpX] == 0 && !cst){
+                    coast.offer(new int[]{y,x,idx});
+                    cst = true;
+                } else if(space[tmpY][tmpX] == 1){
+                    dfs(tmpY,tmpX,idx);
+                }
+            }
         }
     }
 
@@ -57,7 +64,7 @@ public class Main {
             visited[tmpY][tmpX] = true;
 
             if(space[tmpY][tmpX] != 0 && space[tmpY][tmpX] != idx){
-                result = cnt;
+                result = cnt - 1;
                 break;
             }
 
@@ -83,6 +90,7 @@ public class Main {
         n = Integer.parseInt(br.readLine());
         space = new int[n][n];
         min = Integer.MAX_VALUE;
+        coast = new ArrayDeque<>();
 
         for(int i = 0 ; i < n; i++){
             String[] input = br.readLine().split(" ");
@@ -100,22 +108,10 @@ public class Main {
             }
         }
 
-        for(int i = 0 ; i < n; i++){
-            for(int j = 0; j < n; j++){
-                if(space[i][j] != 0){ // 땅이라면?
-                    int tmpIdx = space[i][j];
+        while(!coast.isEmpty()){
+            int tmp[] = coast.poll();
 
-                    for(int p = 0; p < 4; p++){
-                        int bY = i + dy[p];
-                        int bX = j + dx[p];
-
-                        //땅이면, 탐색 안함
-                        if(outBound(bY,bX) || space[bY][bX] != 0) continue;
-
-                        min = Math.min(min,bfs(bY,bX,tmpIdx));
-                    }
-                }
-            }
+            min = Math.min(min,bfs(tmp[0],tmp[1],tmp[2]));
         }
 
         System.out.println(min);
