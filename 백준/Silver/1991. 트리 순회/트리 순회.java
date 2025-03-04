@@ -1,99 +1,84 @@
 import java.io.*;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
 
-//char 배열 초기화값은 '\u0000'이다.
+class Node {
+	char value;
+	Node left;
+	Node right;
+
+	public Node(char value) {
+		this.value = value;
+		this.left = null;
+		this.right = null;
+	}
+}
+
 public class Main {
 	public static int n;
-	public static char[] tree;
-	public static int max;
+	public static Node[] tree;
 	public static StringBuilder sb = new StringBuilder();
-	
-	public static int findIdx(char c) {
-		for(int i = 1; i < tree.length; i++) {
-			if(tree[i] == c) {
-				return i;
-			}
-		}
+
+	public static void preOrder(Node node) {
+		if (node == null)
+			return;
+
+		sb.append(node.value);
+		preOrder(node.left);
+		preOrder(node.right);
+	}
+
+	public static void inOrder(Node node) {
+		if (node == null)
+			return;
 		
-		return 0;
+		inOrder(node.left);
+		sb.append(node.value);
+		inOrder(node.right);
 	}
-	
-	public static void preOrder(int node) {
-		if(node <= max) {
-			if(tree[node] != '\u0000') {
-				sb.append(tree[node]);
-			}
-			
-			preOrder(2 * node);
-			
-			preOrder(2 * node + 1);
-		}
-	}
-	
-	public static void inOrder(int node) {
-		if(node <= max) {
-			inOrder(2 * node);
-			
-			if(tree[node] != '\u0000') {
-				sb.append(tree[node]);
-			}
-			
-			inOrder(2 * node + 1);
-		}
-	}
-	
-	public static void postOrder(int node) {
-		if(node <= max) {
-			postOrder(2 * node);
-			
-			postOrder(2 * node + 1);
-			
-			if(tree[node] != '\u0000') {
-				sb.append(tree[node]);
-			}
-		}
+
+	public static void postOrder(Node node) {
+		if (node == null)
+			return;
+		
+		postOrder(node.left);
+		postOrder(node.right);
+		sb.append(node.value);
 	}
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
+
 		n = Integer.parseInt(br.readLine());
-		tree = new char[(int) Math.pow(2, 26) + 4];
-		max = 0;
-		
-		for(int i = 1; i <= n; i++) {
+		tree = new Node[n + 1];
+
+		for (int i = 1; i <= n; i++) {
 			String[] input = br.readLine().split(" ");
-			int idx = findIdx(input[0].charAt(0));
-			
-			if(idx == 0) {
-				idx = input[0].charAt(0) - 64;
+
+			char pr = input[0].charAt(0);
+			char l = input[1].charAt(0);
+			char r = input[2].charAt(0);
+
+			if (tree[pr - 'A'] == null) {
+				tree[pr - 'A'] = new Node(pr);
 			}
-			 
-			
-			tree[idx] = input[0].charAt(0);
-			max = Math.max(max, idx);
-			
-			if(input[1].charAt(0) != '.') {
-				tree[idx * 2] = input[1].charAt(0);
-				max = Math.max(max, idx * 2);
+
+			if (l != '.') {
+				tree[l - 'A'] = new Node(l);
+				tree[pr - 'A'].left = tree[l - 'A'];
 			}
-			
-			if(input[2].charAt(0) != '.') {
-				tree[idx * 2 + 1] = input[2].charAt(0);
-				max = Math.max(max, idx * 2 + 1);
+
+			if (r != '.') {
+				tree[r - 'A'] = new Node(r);
+				tree[pr - 'A'].right = tree[r - 'A'];
 			}
 		}
 		
-		preOrder(1);
+		preOrder(tree[0]);
 		sb.append("\n");
-		inOrder(1);
+		inOrder(tree[0]);
 		sb.append("\n");
-		postOrder(1);
-		
-		System.out.println(sb);
+		postOrder(tree[0]);
 
+		System.out.println(sb.toString());
 	}
 
 }
