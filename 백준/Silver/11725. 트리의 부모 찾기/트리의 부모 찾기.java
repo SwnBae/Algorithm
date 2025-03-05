@@ -7,13 +7,9 @@ public class Main {
 	public static int n;
 	
 	public static void dfs(int node, int preNode) {
-		if(parent[node] != 0) return;
-		
-		parent[node] = preNode;
-		
 		for(int next : graph.get(node)) {
 			if(parent[next] != 0) continue;
-			
+			parent[next] = node;
 			dfs(next, node);
 		}
 	}
