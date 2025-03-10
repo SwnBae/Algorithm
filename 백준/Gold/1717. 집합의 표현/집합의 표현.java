@@ -8,13 +8,10 @@ public class Main {
 	public static int[] rank;
 	
 	public static int find(int x) {
-		if(parents[x]== x) {
-			return x;
-		} else {
-			int y = find(parents[x]);
-			parents[x] = y;
-			return y;
-		}
+		if (parents[x] != x) {
+			parents[x] = find(parents[x]);
+        }
+        return parents[x];
 	}
 	
 	public static void union(int x, int y) {
@@ -45,7 +42,7 @@ public class Main {
 		
 		for(int i = 1; i <= n; i++) {
 			parents[i] = i;
-			rank[i] = 1;
+			rank[i] = 1; 
 		}
 		
 		for(int i = 0; i < m; i++) {
@@ -58,8 +55,10 @@ public class Main {
 			} else {
 				if(find(a) == find(b)) {
 					bw.append("YES\n");
+					//System.out.println("YES");
 				} else {
 					bw.append("NO\n");
+					//System.out.println("NO");
 				}
 			}
 		}
