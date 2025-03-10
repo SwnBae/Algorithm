@@ -11,6 +11,7 @@ public class Main {
 		if (parents[x] != x) {
 			parents[x] = find(parents[x]);
         }
+		
         return parents[x];
 	}
 	
@@ -22,10 +23,11 @@ public class Main {
 		
 		if(rank[tmpX] > rank[tmpY]) {
 			parents[tmpY] = tmpX;
-			rank[tmpX] += rank[tmpY]; 
-		} else {
+		} else if(rank[tmpX] < rank[tmpY]){
 			parents[tmpX] = tmpY;
-			rank[tmpY] += rank[tmpX]; 
+		} else {
+			parents[tmpY] = tmpX;
+			rank[tmpX]++;
 		}
 	}
 
@@ -65,7 +67,5 @@ public class Main {
 		
 		bw.flush();
 		bw.close();
-
 	}
-
 }
