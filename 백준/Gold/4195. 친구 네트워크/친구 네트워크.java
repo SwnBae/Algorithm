@@ -50,11 +50,6 @@ public class Main {
 			parent = new int[2*n + 1];
 			map = new HashMap<>();
 			
-			for(int i = 1; i <= 2*n; i++) {
-				parent[i] = i;
-				rank[i] = 1; 
-			}
-			
 			for(int i = 0; i < n; i++) {
 				if(i > 0) sb.append("\n");
 				
@@ -64,6 +59,8 @@ public class Main {
 					if(map.containsKey(input[j])) {
 						continue;
 					} else {
+						rank[cnt] = 1;
+						parent[cnt] = cnt;
 						map.put(input[j], cnt++);
 					}
 				}
