@@ -1,9 +1,11 @@
 import java.io.*;
 
+//경로압축 + rank최적화
 public class Main {
 	public static int n;
 	public static int m;
 	public static int[] parents;
+	public static int[] rank;
 	
 	public static int find(int x) {
 		if(parents[x]== x) {
@@ -19,22 +21,31 @@ public class Main {
 		int tmpX = find(x);
 		int tmpY = find(y);
 		
-		if(tmpX != tmpY) {
+		if(tmpY == tmpX) return;
+		
+		if(rank[tmpX] > rank[tmpY]) {
 			parents[tmpY] = tmpX;
+			rank[tmpX] += rank[tmpY]; 
+		} else {
+			parents[tmpX] = tmpY;
+			rank[tmpY] += rank[tmpX]; 
 		}
 	}
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 		
 		String[] input = br.readLine().split(" ");
 		
 		n = Integer.parseInt(input[0]);
 		m = Integer.parseInt(input[1]);
 		parents = new int[n + 1];
+		rank = new int[n+1];
 		
 		for(int i = 1; i <= n; i++) {
-			parents[i]= i; 
+			parents[i] = i;
+			rank[i] = 1;
 		}
 		
 		for(int i = 0; i < m; i++) {
@@ -46,14 +57,15 @@ public class Main {
 				union(a, b);
 			} else {
 				if(find(a) == find(b)) {
-					System.out.println("YES");
+					bw.append("YES\n");
 				} else {
-					System.out.println("NO");
+					bw.append("NO\n");
 				}
 			}
 		}
 		
-		
+		bw.flush();
+		bw.close();
 
 	}
 
