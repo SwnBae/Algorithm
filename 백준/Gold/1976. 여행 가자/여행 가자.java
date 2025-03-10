@@ -1,5 +1,4 @@
 import java.io.*;
-import java.util.Arrays;
 
 public class Main {
 	public static int n;
@@ -24,11 +23,10 @@ public class Main {
 		
 		if(rank[x]> rank[y]) {
 			parent[y] = x; 
-		} else if(rank[x]< rank[y]) {
-			parent[x] = y; 
+			rank[x]+= rank[y]; 
 		} else {
-			parent[y] = x; 
-			rank[x]++; 
+			parent[x] = y;
+			rank[y] += rank[x]; 
 		}
 	}
 	
