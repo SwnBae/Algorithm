@@ -1,86 +1,66 @@
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.io.*;
+import java.util.ArrayDeque;
 import java.util.Queue;
-import java.util.Scanner;
 
 public class Main {
-	public static List<int[]> ladder = new ArrayList<>();
-	public static List<int[]> snake = new ArrayList<>();
-	public static boolean[] visited = new boolean[101];
-	public static int[] dice = {1,2,3,4,5,6};
+	public static int[] option;
+	public static int[] space;
+	public static boolean[] visited;
 	
-	public static boolean check(int num) {
-		if(num>100) return false;
-		if(visited[num]) return false;
-		return true;
-	}
+	public static int l;
+	public static int s;
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
-		String[] input = sc.nextLine().split(" ");
-		int n = Integer.parseInt(input[0]);
-		int m = Integer.parseInt(input[1]);
-		Queue<int[]> space = new LinkedList<>(); //
-		int result = 0;
+		String[] ls = br.readLine().split(" ");
 		
-		for(int i=0;i<n;i++) {
-			String[] input2 = sc.nextLine().split(" ");
-			int start = Integer.parseInt(input2[0]);
-			int end = Integer.parseInt(input2[1]);
-			ladder.add(new int[] {start,end});
-		}
+		l = Integer.parseInt(ls[0]);
+		s = Integer.parseInt(ls[1]);
 		
-		for(int i=0;i<m;i++) {
-			String[] input2 = sc.nextLine().split(" ");
-			int start = Integer.parseInt(input2[0]);
-			int end = Integer.parseInt(input2[1]);
-			snake.add(new int[] {start,end});
-		}
+		option = new int[101];
+		space = new int[101];
+		visited = new boolean[101];
 		
-		space.add(new int[] {1,0});
-		
-		while(!space.isEmpty()) {
-			int[] present = space.poll();
-			int now = present[0];
-			int pcount = present[1];
+		for(int i = 0; i < l + s; i++) {
+			String[] op = br.readLine().split(" ");
 			
-			if(now == 100) {
-				result = pcount;
-				break;
+			option[Integer.parseInt(op[0])] = Integer.parseInt(op[1]);
+		}
+		
+		Queue<int[]> queue = new ArrayDeque<>();
+		
+		queue.add(new int[] {1, 0}); // idx, cnt
+		visited[1] = true;
+		
+		while(!queue.isEmpty()) {
+			int[] tmp = queue.poll();
+			int idx = tmp[0];
+			int cnt = tmp[1];
+			
+			if(idx == 100) {
+				System.out.println(cnt);
+				return;
 			}
 			
-			if(visited[now]) continue;
-			visited[now] = true;
-			
-			for(int i=0;i<6;i++) {
-				if(check(now + dice[i])) {
-					boolean meet = false;
+			for(int i = 1; i <=6; i++) {
+				if(idx + i > 100 || idx + i < 0 || visited[idx + i]) continue;
+				
+				visited[idx + i] = true;
+				
+				if(option[idx + i] != 0) {
+					int tmpIdx = option[idx + i];
 					
-					for(int[] arr: ladder) {
-						if(arr[0] == now + dice[i]) {
-							meet = true;// 사다리 만났을 때
-							space.add(new int[] {arr[1],pcount+1});
-							//System.out.println(arr[1]);
-							break;
-							}
-					}
+					if(visited[tmpIdx]) continue;
 					
-					for(int[] arr: snake) {
-						if(arr[0] == now + dice[i]) {
-							meet = true;// 뱀 만났을 때
-							space.add(new int[] {arr[1],pcount+1});
-							break;
-						}
-					}
-					if (!meet) space.add(new int[] {now + dice[i],pcount+1});
-					//System.out.println(now + dice[i]);
+					visited[tmpIdx] = true;
+					queue.add(new int[] {tmpIdx, cnt + 1});
+				} else {
+					queue.add(new int[] {idx + i, cnt + 1});
 				}
 			}
 		}
 
-		System.out.println(result);
 	}
 
 }
