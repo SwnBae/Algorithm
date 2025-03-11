@@ -14,8 +14,8 @@ public class Main {
 			return;
 		}
 		
-		for(int i = 0; i < 26; i++) { // numSet안에 있는 것들 + 방문 안한 것만 검사, 
-			if(visited[i] || i <= pre) continue;
+		for(int i = pre + 1; i < 26; i++) { // numSet안에 있는 것들 + 방문 안한 것만 검사, 
+			if(visited[i]) continue;
 
 			visited[i] = true;
 			dfs(cnt + 1, i);
