@@ -1,14 +1,12 @@
 import java.io.*;
 
 public class Main {
-	public static boolean[] numSet; // 후보군
 	public static boolean[] visited;
 	public static String[] word;
 	
 	public static int n;
 	public static int k;
 	public static int max;
-	public static int maxLength;
 	
 	public static void dfs(int cnt, int pre) { // 중복 없이, 순서 상관 없음 => 오름차순
 		if(cnt == k - 5) {
@@ -16,20 +14,12 @@ public class Main {
 			return;
 		}
 		
-		boolean end = true;
-		
 		for(int i = 0; i < 26; i++) { // numSet안에 있는 것들 + 방문 안한 것만 검사, 
-			if(!numSet[i] || visited[i] || i <= pre) continue;
-			
-			end = false;
+			if(visited[i] || i <= pre) continue;
+
 			visited[i] = true;
 			dfs(cnt + 1, i);
 			visited[i] = false; 
-		}
-		
-		if(end) {
-			max = Math.max(max, check());
-			return;
 		}
 	}
 	
@@ -62,15 +52,8 @@ public class Main {
 		k = Integer.parseInt(nk[1]);
 		max = 0;
 		
-		numSet = new boolean[26];
 		visited = new boolean[26];
 		word = new String[n];
-		
-		numSet['a' - 'a'] = true;
-		numSet['n' - 'a'] = true;
-		numSet['t' - 'a'] = true;
-		numSet['i' - 'a'] = true;
-		numSet['c' - 'a'] = true;
 		
 		visited['a' - 'a'] = true;
 		visited['n' - 'a'] = true;
@@ -81,16 +64,12 @@ public class Main {
 		for(int i = 0; i < n; i++) {
 			String input = br.readLine();
 			word[i] = input;
-			maxLength = Math.max(maxLength, input.length());
-			
-			for(int j = 4; j < input.length() - 4; j++) {
-				numSet[input.charAt(j) - 'a'] = true;
-			}
 		}
 		
-		//System.out.println(Arrays.toString(numSet));
 		if(k >=5) {
 			dfs(0, -1);
+		} else if(k == 26) {
+			max = n;
 		}
 		
 		System.out.println(max);
