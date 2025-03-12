@@ -37,18 +37,19 @@ public class Main {
 			for(int i = 0; i < 4; i++) {
 				int tmpY = y + dy[i];
 				int tmpX = x + dx[i];
+				int nextBreak = canBreak;
 				
 				if(outBound(tmpY, tmpX)) continue;
 				
-				if(space[tmpY][tmpX] == 1 && !visited[tmpY][tmpX][BREAK]) {
-					if(canBreak == BREAK) continue; // 이미 벽을 부순 경우
-					else {
-						visited[tmpY][tmpX][BREAK] = true;
-						queue.add(new int[] {tmpY,tmpX,cnt + 1, BREAK});
-					}
-				} else if(space[tmpY][tmpX] == 0 && !visited[tmpY][tmpX][canBreak]){
-					visited[tmpY][tmpX][canBreak] = true;
-					queue.add(new int[] {tmpY,tmpX,cnt + 1, canBreak});
+				if(space[tmpY][tmpX] == 1) {
+					if(nextBreak == BREAK || visited[tmpY][tmpX][BREAK]) continue;
+					
+					nextBreak = BREAK;
+				}
+				
+				if(!visited[tmpY][tmpX][nextBreak]) {
+					visited[tmpY][tmpX][nextBreak] = true;
+					queue.add(new int[] {tmpY,tmpX,cnt + 1, nextBreak});
 				}
 			}
 		}
