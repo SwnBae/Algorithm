@@ -3,11 +3,11 @@ import java.util.*;
 
 public class Main {
     public static int[] arr;
-    public static Set<String> visited;
-
-//    public static boolean outBound(int a, int b, int c){
-//        return a < 0 || b < 0 || c < 0 || a > 2000 || b > 2000 || c > 2000;
-//    }
+    public static boolean[][] visited;
+    // A + B + C는 항상 동일하다.
+    // 따라서, A,B만 체크하면 C는 항상 확정 (오름차순 기준)
+    // 2차원 방문 체크만 해주면 된다.
+    // 크기는 각 1500, 최대 합은 500*3이다.
 
     public static boolean bfs() {
         if((arr[0] + arr[1] + arr[2]) % 3 != 0){
@@ -17,7 +17,7 @@ public class Main {
         Queue<int[]> queue = new ArrayDeque<>();
 
         queue.add(new int[]{arr[0], arr[1], arr[2]});
-        visited.add(arr[0] + " " + arr[1] + " " + arr[2]);
+        visited[arr[0]][arr[1]] = true;
 
         while (!queue.isEmpty()) {
             int[] tmp = queue.poll();
@@ -41,12 +41,10 @@ public class Main {
                     int[] next = new int[]{a, b, c};
                     Arrays.sort(next);
 
-                    StringBuilder sb = new StringBuilder();
-                    sb.append(next[0]).append(" ").append(next[1]).append(" ").append(next[2]);
                     // 다시 고려
-                    if(visited.contains(sb.toString())) continue;
+                    if(visited[next[0]][next[1]]) continue;
 
-                    visited.add(sb.toString());
+                    visited[next[0]][next[1]] = true;
                     queue.add(next);
                 }
             }
@@ -63,7 +61,7 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         String[] input = br.readLine().split(" ");
-        visited = new HashSet<>();
+        visited = new boolean[1501][1501];
         arr = new int[3];
 
         for (int i = 0; i < 3; i++) {
