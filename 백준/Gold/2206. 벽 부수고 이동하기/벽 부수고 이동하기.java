@@ -67,9 +67,9 @@ public class Main {
 		visited = new boolean[n][m][2];
 		
 		for(int i = 0; i < n; i++) {
-			String[] input = br.readLine().split("");
+			String input = br.readLine();
 			for(int j = 0; j < m; j++) {
-				space[i][j]= Integer.parseInt(input[j]); 
+				space[i][j]= input.charAt(j) - '0'; 
 			}
 		}
 		
