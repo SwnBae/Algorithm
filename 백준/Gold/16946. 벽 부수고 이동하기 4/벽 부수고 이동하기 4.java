@@ -43,26 +43,24 @@ public class Main {
 	}
 	
 	public static int calculate(int y, int x) {
-		int result = 0;
+		int result = 1;
 		
-		boolean[] visited = new boolean[id];
+		Set<Integer> set = new HashSet<>();
 		
 		for(int i = 0; i < 4; i++) {
 			int tmpY = y + dy[i];
 			int tmpX = x + dx[i];
 			
 			if(!outBound(tmpY, tmpX) && space[tmpY][tmpX] != 1) {
-				int tmpID = space[tmpY][tmpX];
-				
-				if(visited[tmpID]) continue;
-				
-				visited[tmpID] = true;
-				
-				result += zeroBundle.get(tmpID);
+				set.add(space[tmpY][tmpX]);
 			}
 		}
 		
-		return result;
+		for (int key : set) {
+			result += zeroBundle.get(key);
+		}
+		
+		return result % 10;
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -95,7 +93,7 @@ public class Main {
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < m; j++) {
 				if(space[i][j] == 1) {
-					sb.append((calculate(i,j) + 1) % 10);
+					sb.append(calculate(i,j));
 				} else {
 					sb.append("0");
 				}
@@ -104,10 +102,5 @@ public class Main {
 		}
 		
 		System.out.println(sb);
-//		for (int i = 0; i < n; i++) {
-//			System.out.println(Arrays.toString(space[i]));
-//		}
-//		
-//		System.out.println(zeroBundle);
 	}
 }
