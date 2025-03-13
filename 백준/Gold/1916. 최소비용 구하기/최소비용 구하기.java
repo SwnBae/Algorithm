@@ -18,25 +18,20 @@ public class Main {
 	public static int m;
 	
 	public static int dijkstra(int st, int ed) {
-		boolean[] visited =  new boolean[n+1];;
 		int[] distance = new int[n+1];
-		
-		Arrays.fill(distance, Integer.MAX_VALUE);
-		
-		distance[st] = 0;
-		
 		PriorityQueue<Edge> pq = new PriorityQueue<>((a,b) ->  {
 			return Integer.compare(a.value, b.value);
 		});
 		
+		Arrays.fill(distance, Integer.MAX_VALUE);
+		
 		pq.add(new Edge(st, 0));
+		distance[st] = 0;
 		
 		while(!pq.isEmpty()) {
 			Edge tmp = pq.poll();
 			
-			if(visited[tmp.node]) continue;
-			
-			visited[tmp.node] = true;
+			if(tmp.value > distance[tmp.node]) continue;
 			
 			for(Edge next : graph.get(tmp.node)) {
 				if(distance[next.node] > distance[tmp.node] + next.value) {
