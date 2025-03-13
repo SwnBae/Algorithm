@@ -32,6 +32,8 @@ public class Main {
 		while(!pq.isEmpty()) {
 			Edge tmp = pq.poll();
 			
+			if(ed == tmp.node) return distance[ed];
+			
 			if(tmp.value > distance[tmp.node]) continue;
 			
 			for(Edge next : graph.get(tmp.node)) {
