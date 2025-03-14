@@ -11,17 +11,6 @@ class Edge {
 	}
 }
 
-class Info {
-	Edge edge;
-	int cnt;
-	int[] rt;
-
-	public Info(Edge edge, int cnt) {
-		this.edge = edge;
-		this.cnt = cnt;
-	}
-}
-
 public class Main {
 	public static final int INF = 1000000000;
 	public static int n;
