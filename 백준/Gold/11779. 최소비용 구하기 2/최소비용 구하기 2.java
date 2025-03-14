@@ -28,28 +28,24 @@ public class Main {
 	public static int m;
 	public static List<List<Edge>> graph;
 
-	public static Info dijk(int st, int end) {
-		PriorityQueue<Info> pq = new PriorityQueue<>((a, b) -> Integer.compare(a.edge.value, b.edge.value));
+	public static int[] route;
+
+	public static int dijk(int st, int end) {
+		PriorityQueue<Edge> pq = new PriorityQueue<>((a, b) -> Integer.compare(a.value, b.value));
 
 		int[] dis = new int[n + 1];
 
 		Arrays.fill(dis, INF);
-		
+
 		dis[st] = 0;
 		
-		Info start = new Info(new Edge(st, 0), 1);
-		start.rt = new int[n + 1];
-		Arrays.fill(start.rt, -1);
-		start.rt[0] = st;
-		
-		pq.add(start);
+		pq.add(new Edge(st, 0));
 
 		while (!pq.isEmpty()) {
-			Info info = pq.poll();
-			Edge cur = info.edge;
+			Edge cur = pq.poll();
 
 			if (cur.node == end) {
-				return info;
+				return dis[end];
 			}
 
 			if (cur.value > dis[cur.node]) {
@@ -59,17 +55,15 @@ public class Main {
 			for (Edge next : graph.get(cur.node)) {
 				if (dis[next.node] > dis[cur.node] + next.value) {
 					dis[next.node] = dis[cur.node] + next.value;
-					Info nxtInfo = new Info(new Edge(next.node, dis[next.node]), info.cnt + 1);
 					
-					nxtInfo.rt = Arrays.copyOf(info.rt, info.rt.length);
-					nxtInfo.rt[nxtInfo.cnt] = next.node;
-					
-					pq.add(nxtInfo);
+					route[next.node] = cur.node;
+
+					pq.add(new Edge(next.node, dis[next.node]));
 				}
 			}
 		}
 
-		return null;
+		return dis[end];
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -78,6 +72,7 @@ public class Main {
 		n = Integer.parseInt(br.readLine());
 		m = Integer.parseInt(br.readLine());
 		graph = new ArrayList<>();
+		route = new int[n + 1];
 
 		for (int i = 0; i <= n; i++) {
 			graph.add(new ArrayList<>());
@@ -93,15 +88,32 @@ public class Main {
 		int start = Integer.parseInt(rst[0]);
 		int end = Integer.parseInt(rst[1]);
 
-		Info result = dijk(start, end);
+		int cost = dijk(start, end);
+		int cnt = 1;
+		
+		ArrayDeque<Integer> deque = new ArrayDeque<>();
+		
+		int idx = end;
+		deque.add(end);
 
-		System.out.println(result.edge.value);
-		System.out.println(result.cnt);
-
-		for (int r : result.rt) {
-			if(r == -1) continue;
-			System.out.print(r + " ");
+		while(route[idx] != 0) {
+			cnt++;
+			deque.add(route[idx]);
+			
+			idx = route[idx];
 		}
+		
+		System.out.println(cost);
+		System.out.println(cnt);
+		
+		StringBuilder sb = new StringBuilder();
+		
+		for(int i = 0; i < cnt; i++) {
+			if(i > 0) sb.append(" ");
+			sb.append(deque.pollLast());
+		}
+		
+		System.out.println(sb);
 
 	}
 
