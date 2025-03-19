@@ -1,103 +1,91 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Queue;
+import java.io.*;
+import java.util.*;
 
 public class Main {
-	public static int n;
-	public static int m;
-	public static int[] dy = {-1, 1, 0, 0};
-	public static int[] dx = {0, 0, -1, 1};
-	public static int[][] space;
-	public static boolean cantFill;
-	
-	public static boolean check(int y, int x) {
-		return y < 0 || y >= m || x < 0 || x >= n || space[y][x] == 1 || space[y][x] == -1;
-	}
+    public static int[] dy = {-1, 1, 0, 0};
+    public static int[] dx = {0,0,-1,1};
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
-		String[] nm = br.readLine().split(" ");
-		
-		n = Integer.parseInt(nm[0]);
-		m = Integer.parseInt(nm[1]);
-		cantFill = true;
-		space = new int[m][n];
-		int maxcnt = 0;
-		int result = 0;
-		int cnt = 0;
-		
-		Queue<int[]> queue = new ArrayDeque<>();
-		
-		for(int i = 0; i < m; i++) {
-			String[] input = br.readLine().split(" ");
-			for(int j = 0; j < n; j++) {
-				space[i][j] = Integer.parseInt(input[j]);
-				
-				if(space[i][j] == 1) {
-					queue.offer(new int[] {i,j,0});
-					maxcnt++;
-					cantFill = false;
-				} else if(space[i][j] == 0) {
-					maxcnt++;
-				}
-			}
-		}
-		
-		while(!queue.isEmpty()) {
-			
-			int[] tmp = queue.poll();
-			int y = tmp[0];
-			int x = tmp[1];
-			int day = tmp[2];
-			
-			if(space[y][x] == 1 && day != 0) { // 이미 방문한 경우
-				if(queue.isEmpty()) {
-					result = -1;
-					break;
-				} else {
-					continue;
-				}
-			}
-			
-			space[y][x] = 1;
-			cnt++;
-			
-//			System.out.println(cnt + "," + maxcnt);
-//			System.out.println("y : "+y + ", x : " + x);
-//			for(int i = 0; i < m; i++) {
-//				System.out.println(Arrays.toString(space[i]));
-//			}
-			
-			
-			if(cnt == maxcnt) {
-				result = day;
-				break;
-			}
-			
-			for(int i = 0; i < 4; i++) {
-				int tmpY = y + dy[i];
-				int tmpX = x + dx[i];
-				
-				if(check(tmpY, tmpX)) continue;
-				
-				queue.offer(new int[] {tmpY, tmpX, day + 1});
-			}
-			
-			if(queue.isEmpty()) {
-				result = -1;
-				break;
-			}
-		}
-		
-		if(cantFill) {
-			System.out.println(-1);
-		} else {
-			System.out.println(result);
-		}
-		
-	}
+    public static int m;
+    public static int n;
+    public static int[][] space;
 
+    public static int totalDay;
+    public static int yet;
+
+    public static ArrayDeque<int[]> queue;
+
+    public static boolean outBound(int y, int x){
+        return y < 0 || y >= n || x < 0 || x >= m;
+    }
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        String[] mn = br.readLine().split(" ");
+        m = Integer.parseInt(mn[0]);
+        n = Integer.parseInt(mn[1]);
+        space = new int[n][m];
+
+        totalDay = 0;
+        yet = 0;
+
+        queue = new ArrayDeque<>();
+
+        int initCnt = 0; //초기에 익은 값 세주기
+
+        for(int i = 0; i < n; i++){
+            String[] input = br.readLine().split(" ");
+            for(int j = 0; j < m; j++){
+                space[i][j] = Integer.parseInt(input[j]);
+
+                if(space[i][j] == 1){
+                    queue.add(new int[]{i,j});
+                    initCnt++;
+                } else if(space[i][j] == 0){
+                    yet++;
+                }
+            }
+        }
+
+        //안익은 토마토가 없다면? 다 익었다!
+        if(yet == 0){
+            System.out.println(0);
+            return;
+        }
+
+        //큐에서 나와야 하는 토마토의 개수
+        int maxCount = yet + initCnt;
+        int cnt = initCnt;
+
+        while (!queue.isEmpty()){
+            int size = queue.size();
+
+            for(int t = 0; t < size; t++){
+                int[] tmp = queue.poll();
+                int y = tmp[0];
+                int x = tmp[1];
+
+                for(int i = 0; i < 4; i++){
+                    int tmpY = y + dy[i];
+                    int tmpX = x + dx[i];
+
+                    if(outBound(tmpY,tmpX) || space[tmpY][tmpX] != 0) continue;
+
+                    space[tmpY][tmpX] = 1;
+                    cnt++;
+                    queue.add(new int[] {tmpY,tmpX});
+                }
+            }
+
+            if(!queue.isEmpty()) {
+                totalDay++;
+            }
+        }
+
+        if(cnt == maxCount){
+            System.out.println(totalDay);
+        } else{
+            System.out.println(-1);
+        }
+    }
 }
