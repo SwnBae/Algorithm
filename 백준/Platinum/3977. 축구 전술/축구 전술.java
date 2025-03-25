@@ -77,6 +77,8 @@ public class Main {
 			if(degree[i] == 0) tmpScc.add(i);
 		}
 		
+		if(tmpScc.size() != 1) return;
+		
 		for(int sccNum : tmpScc) {
 			if(topologySort(sccNum)) {
 				for(int n : sccList.get(sccNum)) {
