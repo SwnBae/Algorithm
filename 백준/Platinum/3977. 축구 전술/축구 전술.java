@@ -53,17 +53,11 @@ public class Main {
 	}
 
 	public static void culculateDegree() {
-//		// 관계 초기화
-//		for (int i = 0; i < sccList.size(); i++) {
-//			sccGraph.add(new ArrayList<>());
-//		}
-
 		degree = new int[sccList.size()];
 
 		for (int cur = 0; cur < n; cur++) {
 			for (int next : graph.get(cur)) {
 				if (sccIdx[cur] != sccIdx[next]) {
-//					sccGraph.get(sccIdx[cur]).add(sccIdx[next]);
 					degree[sccIdx[next]]++;
 				}
 
@@ -72,44 +66,19 @@ public class Main {
 	}
 
 	public static void calculateStart() {
-		List<Integer> tmpScc = new ArrayList<>();
+		int num = -1;
 
 		for (int i = 0; i < sccList.size(); i++) {
-			if (degree[i] == 0)
-				tmpScc.add(i);
+			if (degree[i] == 0) {
+				if(num != -1) return;
+				
+				num = i;
+			}
 		}
-
-		if (tmpScc.size() != 1)
-			return;
-
-		for (int n : sccList.get(tmpScc.get(0))) {
+		for (int n : sccList.get(num)) {
 			result.add(n);
 		}
 	}
-
-//	public static boolean topologySort(int start) {
-//		ArrayDeque<Integer> deque = new ArrayDeque<>();
-//
-//		deque.add(start);
-//
-//		for (int i = 0; i < sccList.size(); i++) {
-//			if (deque.isEmpty()) {
-//				return false;
-//			}
-//
-//			int node = deque.poll();
-//
-//			for (int next : sccGraph.get(node)) {
-//				degree[next]--;
-//
-//				if (degree[next] == 0) {
-//					deque.add(next);
-//				}
-//			}
-//		}
-//
-//		return true;
-//	}
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -126,7 +95,6 @@ public class Main {
 
 			graph = new ArrayList<>();
 			sccList = new ArrayList<>();
-//			sccGraph = new ArrayList<>();
 
 			stack = new ArrayDeque<>();
 			result = new TreeSet<>();
