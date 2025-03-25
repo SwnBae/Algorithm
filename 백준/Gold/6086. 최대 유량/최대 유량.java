@@ -18,7 +18,7 @@ public class Main {
 			Arrays.fill(d, -1);
 			ArrayDeque<Integer> queue = new ArrayDeque<>();
 			
-			d[start] = start;
+			//d[start] = start;
 			queue.add(start);
 			
 			while(!queue.isEmpty()) {
