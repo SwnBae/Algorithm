@@ -36,6 +36,7 @@ public class Main {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
 		String[] nmk = br.readLine().split(" ");
+		StringBuilder sb = new StringBuilder();
 		
 		n = Integer.parseInt(nmk[0]);
 		int calCnt = Integer.parseInt(nmk[1]) + Integer.parseInt(nmk[2]);
@@ -66,10 +67,12 @@ public class Main {
 				int left = Integer.parseInt(input[1]) - 1;
 				int right = Integer.parseInt(input[2]) - 1;
 				
-				System.out.println(sum(0, n - 1, 1, left, right));
+				
+				sb.append(sum(0, n - 1, 1, left, right) + "\n");
 			}
 		}
 		
+		System.out.println(sb.toString());
 	}
 
 }
