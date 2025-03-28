@@ -9,9 +9,7 @@ public class Main {
 		
 		tree[node]++;
 		
-		if(start == end) {
-			return;
-		}
+		if(start == end) return;
 		
 		int mid = (start + end) / 2;
 		
@@ -25,21 +23,18 @@ public class Main {
 		if(start == end) {
 			return start;
 		}
-		
-		int l = tree[node * 2];
 		int mid = (start + end) / 2;
 		
-		
-		if(count <= l) {
+		if(count <= tree[node * 2]) {
 			return remove(node * 2, start, mid, count);
 		} else {
-			return remove(node * 2 + 1, mid + 1, end, count - l);
+			return remove(node * 2 + 1, mid + 1, end, count - tree[node * 2]);
 		}
 	}
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 		
 		tree = new int[SIZE * 4];
 		
@@ -53,10 +48,11 @@ public class Main {
 			if(op == 1) {
 				add(1, 0, SIZE - 1, val);
 			} else {
-				sb.append(remove(1, 0, SIZE - 1, val) + "\n");
+				bw.write(remove(1, 0, SIZE - 1, val) + "\n");
 			}
 		}
 		
-		System.out.println(sb.toString());
+		bw.flush();
+		bw.close();
 	}
 }
