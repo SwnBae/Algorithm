@@ -2,32 +2,29 @@ import java.io.*;
 import java.util.Arrays;
 
 public class Main {
+	public static final int INF = 16000001;
 	public static int[][] cost;
 	public static int[][] dp;
 	public static int n;
 	public static int result;
 	
-	public static void dfs(int now, int visited) {
+	public static int dfs(int now, int visited) {
 		if(visited == ((1 << n) - 1)) {
-			if(cost[now][0] == 0) return;
-			int tmp = dp[now][visited] + cost[now][0];
-			result = Math.min(result, tmp);
-			return;
+			if(cost[now][0] == 0) return INF;
+			
+			return cost[now][0];
 		}
 		
+		if(dp[now][visited] != -1) return dp[now][visited];
+		dp[now][visited] = INF;
+		
 		for(int i = 0; i < n; i++) {
-			int visit = (1 << i);
-			int nxtVisit = (visited | visit);
+			if((visited & (1 << i)) !=0 || cost[now][i] == 0) continue;
 			
-			if(nxtVisit == visited) continue;
-			if(cost[now][i] == 0) continue;
-			
-			if(dp[now][visited] + cost[now][i] < dp[i][nxtVisit]) {
-				dp[i][nxtVisit] = dp[now][visited] + cost[now][i];
-				dfs(i, nxtVisit);
-			}
-			
+			dp[now][visited] = Math.min(dp[now][visited], cost[now][i] + dfs(i, visited | (1 <<i)));
 		}
+		
+		return dp[now][visited];
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -36,19 +33,16 @@ public class Main {
 		n = Integer.parseInt(br.readLine());
 		cost = new int[n][n];
 		dp = new int[n][1 << n];
-		result = Integer.MAX_VALUE;
+		result = INF;
 		
 		for(int i = 0; i < n; i++) {
 			String[] input = br.readLine().split(" ");
-			Arrays.fill(dp[i], Integer.MAX_VALUE);
+			Arrays.fill(dp[i], -1);
 			for(int j = 0; j < n; j++) {
 				cost[i][j] = Integer.parseInt(input[j]);
 			}
 		}
 		
-		dp[0][1] = 0;
-		dfs(0,1);
-		
-		System.out.println(result);
+		System.out.println(dfs(0,1));
 	}
 }
