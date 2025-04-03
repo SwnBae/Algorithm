@@ -1,48 +1,29 @@
 import java.io.*;
 import java.util.*;
-import java.util.Arrays;
 
 public class Main {
-	public static int n;
-	public static int[] arr;
-	
-	public static int bfs() {
-		ArrayDeque<int[]> queue = new ArrayDeque<>();
-		
-		boolean[] visited = new boolean[n];
-		
-		visited[0] = true;
-		queue.add(new int[] {0, 0});
-		
-		while(!queue.isEmpty()) {
-			int[] tmp = queue.poll();
-			int idx = tmp[0];
-			int cnt = tmp[1];
-			
-			if(idx == n - 1) {
-				return cnt;
-			}
-			
-			for(int i = 0; i <= arr[idx]; i++) {
-				if(idx + i >= n || visited[idx + i]) continue;
-				
-				visited[idx + i] = true;
-				queue.add(new int[] {idx + i, cnt + 1});
-			}
-		}
-		
-		return -1;
-	}
-
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
-		n = Integer.parseInt(br.readLine());
-		arr= Arrays.stream(br.readLine().split(" "))
+
+		int n = Integer.parseInt(br.readLine());
+		int[] arr = Arrays.stream(br.readLine().split(" "))
 				.mapToInt(Integer::parseInt)
 				.toArray();
-		
-		System.out.println(bfs());
-	}
+		int[] dp = new int[n];
 
+		Arrays.fill(dp, Integer.MAX_VALUE);
+		dp[0] = 0;
+
+		for (int i = 0; i < n; i++) {
+			if (dp[i] == Integer.MAX_VALUE)
+				continue; // 도달 불가능한 위치는 패스
+
+			// i에서 점프 가능한 모든 위치 갱신
+			for (int j = 1; j <= arr[i] && i + j < n; j++) {
+				dp[i + j] = Math.min(dp[i + j], dp[i] + 1);
+			}
+		}
+
+		System.out.println(dp[n - 1] == Integer.MAX_VALUE ? -1 : dp[n - 1]);
+	}
 }
