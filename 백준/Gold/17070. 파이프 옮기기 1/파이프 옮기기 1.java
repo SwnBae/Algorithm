@@ -35,57 +35,26 @@ public class Main {
             int x = tmp[1];
             int preDir = tmp[2];
 
-
-
-            if(preDir == 0){
-                for(int i = 0; i < 3; i++){
-                    if(i == 2) continue;
-
-                    if(i == 1){
-                        if(checkCross(y,x)) continue;
-                    }
-                    int tmpY = y + dy[i];
-                    int tmpX = x + dx[i];
-
-                    if(outBound(tmpY,tmpX) || space[tmpY][tmpX] == 1) continue;
-
-                    count[tmpY][tmpX]++;
-
-                    queue.add(new int[]{tmpY,tmpX,i});
-                }
-            } else if(preDir == 2){
-                for(int i = 0; i < 3; i++){
-                    if(i == 0) continue;
-
-                    if(i == 1){
-                        if(checkCross(y,x)) continue;
-                    }
-                    int tmpY = y + dy[i];
-                    int tmpX = x + dx[i];
-
-                    if(outBound(tmpY,tmpX) || space[tmpY][tmpX] == 1) continue;
-
-                    count[tmpY][tmpX]++;
-
-                    queue.add(new int[]{tmpY,tmpX,i});
-                }
-            } else{
-                for(int i = 0; i < 3; i++){
-                    int tmpY = y + dy[i];
-                    int tmpX = x + dx[i];
-
-                    if(i == 1){
-                        if(checkCross(y,x)) continue;
-                    }
-
-                    if(outBound(tmpY,tmpX) || space[tmpY][tmpX] == 1) continue;
-
-                    count[tmpY][tmpX]++;
-
-                    queue.add(new int[]{tmpY,tmpX, i});
-                }
+            if(y == n - 1 && x == n - 1){
+                continue;
             }
 
+            for(int i = 0; i < 3; i++){
+                if((i == 0 && preDir == 2) || (i == 2 && preDir == 0)) continue;
+
+                if(i == 1){
+                    if(checkCross(y,x)) continue;
+                }
+
+                int tmpY = y + dy[i];
+                int tmpX = x + dx[i];
+
+                if(outBound(tmpY,tmpX) || space[tmpY][tmpX] == 1) continue;
+
+                count[tmpY][tmpX]++;
+
+                queue.add(new int[]{tmpY,tmpX,i});
+            }
         }
 
         return count[n-1][n-1];
