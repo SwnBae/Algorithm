@@ -41,16 +41,10 @@ public class Main {
             }
 
             for(Edge next : graph.get(edge.node)){
-                if(edge.cost <= next.cost){
-                    if(maxWeight[next.node] < edge.cost){
-                        pq.add(new Edge(next.node, edge.cost));
-                        maxWeight[next.node] = edge.cost;
-                    }
-                } else{
-                    if(maxWeight[next.node] < next.cost){
-                        pq.add(new Edge(next.node, next.cost));
-                        maxWeight[next.node] = next.cost;
-                    }
+                int newWeight = Math.min(edge.cost, next.cost);
+                if(maxWeight[next.node] < newWeight){
+                    pq.add(new Edge(next.node, newWeight));
+                    maxWeight[next.node] = newWeight;
                 }
             }
         }
