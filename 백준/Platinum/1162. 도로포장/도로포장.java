@@ -46,7 +46,8 @@ public class Main {
             if (dist[curNode][curCnt] < curVal) continue;
 
             if(curNode == n) {
-                minTime = Math.min(minTime, curVal);
+                minTime = curVal;
+                return;
             }
 
             for(Edge next : graph.get(curNode)){
