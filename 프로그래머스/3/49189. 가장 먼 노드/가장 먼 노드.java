@@ -12,12 +12,10 @@ class Edge {
 
 class Solution {
     List<List<Edge>> graph;
-    int[] count;
     int answer;
     int n;
     
     public int solution(int n, int[][] edge) {
-        count = new int[50001];
         graph = new ArrayList<>();
         this.n = n;
         answer = 0;
@@ -63,9 +61,7 @@ class Solution {
         }
         
         for(int i = 1; i <= n; i++) {
-            if(distance[i] == max) {
-                answer++;
-            }
+            if(distance[i] == max) answer++;
         }
     }
 }
