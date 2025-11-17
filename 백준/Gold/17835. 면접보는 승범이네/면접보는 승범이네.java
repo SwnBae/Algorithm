@@ -69,7 +69,7 @@ public class Main {
             if(distance[cur.node] < cur.val) continue;
             
             for(Edge nxt : graph.get(cur.node)) {
-                if(distance[nxt.node] <= cur.val + nxt.val || interview.contains(nxt.node)) continue;
+                if(distance[nxt.node] <= cur.val + nxt.val) continue;
                 
                 distance[nxt.node] = cur.val + nxt.val;
                 pq.add(new Edge(nxt.node, distance[nxt.node]));
