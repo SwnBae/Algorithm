@@ -1,43 +1,30 @@
+import java.util.*;
+
 class Solution {
-    int[] numbers;
-    int target;
-    boolean[] op;
-    int answer;
-    
     public int solution(int[] numbers, int target) {
-        this.numbers = numbers;
-        this.target = target;
-        op = new boolean[numbers.length];
-        answer = 0;
-        
-        dfs(0);
-        
-        return answer;
+        return bfs(numbers, target);
     }
     
-    void dfs(int depth) {
-        if(depth == numbers.length) {
-            isTarget();
-            return;
-        }
-        
-        op[depth] = true;
-        dfs(depth + 1);
-        
-        op[depth] = false;
-        dfs(depth + 1);
-    }
-    
-    void isTarget() {
+    int bfs(int[] numbers, int target) {
+        Deque<int[]> dq = new ArrayDeque<>();
         int result = 0;
-        for(int i = 0; i < numbers.length; i++) {
-            if(op[i]) {
-                result += numbers[i];
+        
+        dq.add(new int[]{-1, 0}); //idx, sum
+        
+        while(!dq.isEmpty()) {
+            int[] cur = dq.poll();
+            int curIdx = cur[0];
+            int curNum = cur[1];
+            
+            if(curIdx == numbers.length - 1) {
+                if(curNum == target) result++;
                 continue;
             }
-            result -= numbers[i];
+            
+            dq.add(new int[]{curIdx + 1, curNum + numbers[curIdx + 1]});
+            dq.add(new int[]{curIdx + 1, curNum - numbers[curIdx + 1]});
         }
         
-        if(result == target) answer++;
+        return result;
     }
 }
