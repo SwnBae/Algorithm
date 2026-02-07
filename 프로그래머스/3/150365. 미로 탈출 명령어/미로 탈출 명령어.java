@@ -1,74 +1,49 @@
 import java.util.*;
 
 class Solution {
-    static class Node {
-        int y, x;
-        StringBuilder path;
-        
-        public Node(int y, int x, StringBuilder path) {
-            this.y = y;
-            this.x = x;
-            this.path = path;
-        }
-    }
-    
-    private static int n, m;
-    private static final int[] dy = {1, 0, 0, -1};
-    private static final int[] dx = {0, -1, 1, 0};
-    private static final char[] dir = {'d', 'l', 'r', 'u'};
+    private int n, m, r, c, k;
+    private final int[] dy = {1, 0, 0, -1};  // d, l, r, u
+    private final int[] dx = {0, -1, 1, 0};
+    private final char[] dir = {'d', 'l', 'r', 'u'};
     
     public String solution(int n, int m, int x, int y, int r, int c, int k) {
         this.n = n;
         this.m = m;
+        this.r = r;
+        this.c = c;
+        this.k = k;
         
         int dist = Math.abs(r - x) + Math.abs(c - y);
-        if (dist > k || (k - dist) % 2 != 0) {
-            return "impossible";
-        }
+        if (dist > k || (k - dist) % 2 != 0) return "impossible";
         
-        return bfs(x, y, r, c, k);
+        StringBuilder path = new StringBuilder();
+        return dfs(x, y, path) ? path.toString() : "impossible";
     }
     
-    private String bfs(int startY, int startX, int endY, int endX, int k) {
-        ArrayDeque<Node> q = new ArrayDeque<>();
-        q.add(new Node(startY, startX, new StringBuilder()));
+    private boolean dfs(int y, int x, StringBuilder path) {
+        // 기저 조건
+        if (path.length() == k) return y == r && x == c;
         
-        while (!q.isEmpty()) {
-            int qSize = q.size();
+        // d, l, r, u 순서로 탐색
+        for (int i = 0; i < 4; i++) {
+            int ny = y + dy[i];
+            int nx = x + dx[i];
             
-            for (int level = 0; level < qSize; level++) {
-                Node cur = q.poll();
-                
-                // 목표 도달 체크
-                if (cur.path.length() == k) {
-                    if (cur.y == endY && cur.x == endX) {
-                        return cur.path.toString();
-                    }
-                    continue;
-                }
-                
-                // d, l, r, u 순서로 확장
-                for (int i = 0; i < 4; i++) {
-                    int ny = cur.y + dy[i];
-                    int nx = cur.x + dx[i];
-                    
-                    if (isOutBound(ny, nx)) continue;
-                    
-                    int remain = k - cur.path.length() - 1;
-                    int nextDist = Math.abs(endY - ny) + Math.abs(endX - nx);
-                    
-                    if (nextDist > remain || (remain - nextDist) % 2 != 0) continue;
-                    
-                    // 통과한 경우만 큐에 추가
-                    StringBuilder newPath = new StringBuilder(cur.path);
-                    newPath.append(dir[i]);
-                    q.add(new Node(ny, nx, newPath));
-                    break;
-                }
-            }
+            // 경계 체크
+            if (isOutBound(ny, nx)) continue;
+            
+            // 도달 가능성 체크
+            int nextRemain = k - path.length() - 1;
+            int nextDist = Math.abs(r - ny) + Math.abs(c - nx);
+            if (nextDist > nextRemain || (nextRemain - nextDist) % 2 != 0) continue;
+            
+            // 선택 → 재귀 → 백트래킹
+            path.append(dir[i]);
+            if (dfs(ny, nx, path)) return true;
+            path.deleteCharAt(path.length() - 1);
         }
         
-        return "impossible";
+        return false;
     }
     
     private boolean isOutBound(int y, int x) {
