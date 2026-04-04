@@ -1,39 +1,35 @@
 import java.util.*;
 
-class Node {
-    int idx;
-    int value;
-    
-    Node (int idx, int value) {
-        this.idx = idx;
-        this.value = value;
-    }
-}
-
 class Solution {
     public int solution(int[] stones, int k) {
-        int answer = Integer.MAX_VALUE;
-        Deque<Node> dq = new ArrayDeque<>();
+        int r = 200000000;
+        int l = 0;
         
-        for(int i = 0; i < stones.length; i++) {
-            Node node = new Node(i, stones[i]);
+        while(l < r) {
+            int mid = (l + r) / 2;
             
-            while(!dq.isEmpty() && i - dq.peekFirst().idx >= k) {
-                dq.pollFirst();
-            }
-            
-            while(!dq.isEmpty() && node.value > dq.peekLast().value) {
-                dq.pollLast();
-            }
-            
-            dq.addLast(node);
-            
-            if(i >= k - 1) {
-               answer = Math.min(answer, dq.peekFirst().value); 
+            if(canCross(stones, k, mid)) {
+                l = mid + 1;
+            } else {
+                r = mid;
             }
         }
         
+        return l;
+    }
+    
+    public boolean canCross(int[] stones, int k, int mid) {
+        int consecutive = 0;
         
-        return answer == Integer.MAX_VALUE ? 0 : answer;
+        for(int i = 0; i < stones.length; i++) {
+            if(stones[i] <= mid) {
+                consecutive++;
+                if(consecutive >= k) return false;
+            } else {
+                consecutive = 0;
+            }
+        }
+        
+        return true;
     }
 }
