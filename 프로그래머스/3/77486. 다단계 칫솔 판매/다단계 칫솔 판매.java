@@ -34,8 +34,9 @@ class Solution {
         int curIdx = idx;
         
         while(curIdx != 0) {
-            answer[curIdx - 1] += curAmount - ((int) (curAmount * 0.1));
-            curAmount = (int) (curAmount * 0.1);
+            int give = curAmount / 10;
+            answer[curIdx - 1] += curAmount - give;
+            curAmount = give;
             
             curIdx = parents[curIdx];
         }
