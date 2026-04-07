@@ -57,7 +57,7 @@ class Solution {
                 int nY = cur.y + dy[d];
                 int nX = cur.x + dx[d];
                 
-                if(isOutBound(nY, nX) || board[nY][nX] == 1|| dist[nY][nX][d] < cur.cost + getCost(cur.preDir, d)) continue;
+                if(isOutBound(nY, nX) || board[nY][nX] == 1|| dist[nY][nX][d] <= cur.cost + getCost(cur.preDir, d)) continue;
                 
                 dist[nY][nX][d] = cur.cost + getCost(cur.preDir, d);
                 
