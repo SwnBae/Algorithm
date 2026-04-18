@@ -13,12 +13,13 @@ class Solution {
     public int solution(int[] info, int[][] edges) {
         int n = info.length;
         List<Integer>[] children = new ArrayList[n];
+        
         for (int i = 0; i < n; i++) children[i] = new ArrayList<>();
         for (int[] edge : edges) children[edge[0]].add(edge[1]);
         
         int answer = 0;
         boolean[] vis = new boolean[1 << n];
-        Queue<Node> queue = new LinkedList<>();
+        Deque<Node> queue = new ArrayDeque<>();
         
         queue.add(new Node(1, 1, 0)); // 0번은 양
         vis[1] = true;
@@ -29,12 +30,17 @@ class Solution {
             
             for (int i = 0; i < n; i++) {
                 if ((cur.state & (1 << i)) == 0) continue;
+                
                 for (int child : children[i]) {
                     int newState = cur.state | (1 << child);
+                    
                     if (vis[newState]) continue;
+                    
                     int newSheep = cur.sheep + (info[child] == 0 ? 1 : 0);
                     int newWolf = cur.wolf + (info[child] == 1 ? 1 : 0);
+                    
                     if (newWolf >= newSheep) continue;
+                    
                     vis[newState] = true;
                     queue.add(new Node(newState, newSheep, newWolf));
                 }
