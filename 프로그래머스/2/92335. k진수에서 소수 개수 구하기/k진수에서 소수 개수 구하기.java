@@ -4,16 +4,6 @@ class Solution {
         String num = Integer.toString(n, k);
         String[] nums = num.split("0");
         
-        // 최댓값 구하기
-        long max = 0;
-        for (String number : nums) {
-            if (number.equals("")) continue;
-            long val = Long.parseLong(number);
-            if (val > max) max = val;
-        }
-        
-        if (max < 2) return 0;
-        
         // max가 배열로 만들기 너무 크면 에라토스테네스 못 씀
         // 근데 문제 제한상 그냥 소수 판별 함수로 처리
         for (String number : nums) {
